@@ -6,8 +6,8 @@ Main Features
 
 #### Modules
 ``` julia
-include("SimDro.jl")
-include("class_conf_pro.jl")
+include("elements.jl")
+include("simulator.jl")
 ```
 
 #### Create Network
