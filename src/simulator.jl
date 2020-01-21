@@ -118,7 +118,7 @@ function callback_fire(neu::NeuralPopulation)
 
 		if neu.spike_delay == 0.0
 			for tar in values(neu.targets)
-				integrator.u[ network_idx.ode_idx[tar.name*'_'*tar.target_receptor] ] += (tar.mean_efficacy * tar.weight)  # No Upper Bond
+				integrator.u[ network_idx.ode_idx[tar.name*'_'*tar.target_receptor] ] += (tar.mean_efficacy * tar.weight)
 			end
 		else
 			enqueue!(neu.spike_delay_storage, integrator.t + neu.spike_delay)
@@ -149,7 +149,7 @@ function callback_spike_delay_detection(neu::NeuralPopulation)
 
 	function affect!(integrator)
 		for tar in values(neu.targets)
-			integrator.u[ network_idx.ode_idx[tar.name*'_'*tar.target_receptor] ] += (tar.mean_efficacy * tar.weight)  # No Upper Bond
+			integrator.u[ network_idx.ode_idx[tar.name*'_'*tar.target_receptor] ] += (tar.mean_efficacy * tar.weight)
 		end
 		dequeue!(neu.spike_delay_storage)
 	end
@@ -162,9 +162,6 @@ function callback_event(event::EventSpike)
 	condition(u, t, integrator) = (t == event.time)
 
 	affect!(integrator) = (integrator.u[ network_idx.ode_idx[event.population*'_'*event.receptor] ] += 1.0)
-	# affect!(integrator) =  # Set Upper Bond
-	#     integrator.u[ network_idx.ode_idx[event.population*'_'*event.receptor] ] +=
-	#         (1.0 - integrator.u[ network_idx.ode_idx[event.population*'_'*event.receptor] ])
 
 	DiscreteCallback(condition, affect!, save_positions=(false,false))
 end
@@ -274,8 +271,4 @@ function gen_problem(net::Network)
 	prob = ODEProblem(f, u0, tspan, p, callback=cb)
 	save_idxs = [network_idx.ode_idx[neu.name] for neu in values(net.neu)]
 	(prob, gen_tstops(net), save_idxs)
-
-	# # MethodError
-	# sol = solve(prob, tstops=tstops)
-	# sol
 end

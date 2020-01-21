@@ -150,7 +150,6 @@ mutable struct Network
 	event_temp::Vector{EventExtFreq}
 	event_end::EventEndTrial
 
-	#  Inner Constructor
 	Network() = new(OrderedDict{String,NeuralPopulation}(),
 					OrderedDict{String,Receptor}(),
 					Vector{Group}(),
